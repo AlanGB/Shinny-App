@@ -1,7 +1,8 @@
 library(shiny)
 
+
 shinyUI(fluidPage(
-    titlePanel("Predict Horsepower from MPG"),
+    titlePanel("Predict Stopping Distance from Car Speed"),
     sidebarLayout(
         sidebarPanel(
             sliderInput("sliderSpeed", "What is the speed of the car?", 1,25, value = 10),
