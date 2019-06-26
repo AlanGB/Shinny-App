@@ -25,33 +25,33 @@ summary(cars)
  Max.   :25.0   Max.   :120.00  
 ```
 
-to create and plot 2 linear models with regression to the origin:
-- Model A: lm(dist ~ speed -1, data = cars)
-- Model B: lm(dist ~ speedsp + speed - 1, data = cars)
+to create and plot 2 linear models with regression to the origin (one linear and one spline), and the respective residual plots.
+
+Also provides the prediction for a selected speed and model, and the formula for the model.
 
 Inputs
 ========================================================
 
-This App takes 3 different inputs:
+This App takes 2 different inputs:
 
 - **Slider Input**: between 1 and 25 that determines the miles per hour used to predict the stopping distance.
 
-- **Checkbox 1**: to determine if the Model A line will be visible.
+- **Selection Box**: to determine if the plot will contain a Linear Regression Model or a Spline Model.
 
-- **Checkbox 2**: to determine if the Model B line will be visible.
 
 Outputs
 ========================================================
 
 - **Plot A**: a scatter plot with 'speed' in the x-axis and 'stopping distance' in the y-axis. It shows (if the user decides so) the lines for Models A and/or B and the difned point for making the predictions.
 
-- **Predicted Stopping Distance for Model A**: the predicted stopping distance for the specified speed according to Model A (see example below).
+- **Predicted Stopping Distance**: the predicted stopping distance for the specified speed according to the selected model (Example below)
 
 
 ```r
 data(cars)
-modelA <- lm(dist ~ speed - 1, data = cars)
-predict(modelA, newdata = data.frame(speed = 20))
+
+fit.lm <- lm(dist ~ speed - 1, data = cars)
+predict(fit.lm, newdata = data.frame(speed = 20))
 ```
 
 ```
@@ -59,22 +59,26 @@ predict(modelA, newdata = data.frame(speed = 20))
 58.18264 
 ```
 
-- **Predicted Stopping Distance for Model B**: the predicted stopping distance for the specified speed according to Model B (see example below).
+- **Selected model**: a text box with the selected model. (Example below)
 
 
 ```r
-cars$speedsp <- ifelse(cars$speed - 19 > 0, cars$speed -19, 0)
-modelB <- lm(dist ~ speedsp + speed - 1, data = cars)
-predict(modelB, newdata = data.frame(speed = 19, speedsp = 0))
+print(fit.lm)
 ```
 
 ```
-       1 
-49.66642 
+
+Call:
+lm(formula = dist ~ speed - 1, data = cars)
+
+Coefficients:
+speed  
+2.909  
 ```
 
 Plot
 ========================================================
-This is an example of the plot produced by the App:
+This is an example of the plots produced by the App:
 
-![plot of chunk plots](Predicting Stopping Distances of Cars-figure/plots-1.png)
+![plot of chunk plots](Predicting Stopping Distances of Cars-figure/plots-1.png)![plot of chunk plots](Predicting Stopping Distances of Cars-figure/plots-2.png)
+

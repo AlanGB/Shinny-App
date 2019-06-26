@@ -14,59 +14,51 @@ The current Shiny Webb App uses the R dataset 'cars' (for more information on th
 summary(cars)
 ```
 
-to create and plot 2 linear models with regression to the origin:
-- Model A: lm(dist ~ speed -1, data = cars)
-- Model B: lm(dist ~ speedsp + speed - 1, data = cars)
+to create and plot 2 linear models with regression to the origin (one linear and one spline), and the respective residual plots.
+
+Also provides the prediction for a selected speed and model, and the formula for the model.
 
 Inputs
 ========================================================
 
-This App takes 3 different inputs:
+This App takes 2 different inputs:
 
 - **Slider Input**: between 1 and 25 that determines the miles per hour used to predict the stopping distance.
 
-- **Checkbox 1**: to determine if the Model A line will be visible.
+- **Selection Box**: to determine if the plot will contain a Linear Regression Model or a Spline Model.
 
-- **Checkbox 2**: to determine if the Model B line will be visible.
 
 Outputs
 ========================================================
 
 - **Plot A**: a scatter plot with 'speed' in the x-axis and 'stopping distance' in the y-axis. It shows (if the user decides so) the lines for Models A and/or B and the difned point for making the predictions.
 
-- **Predicted Stopping Distance for Model A**: the predicted stopping distance for the specified speed according to Model A (see example below).
+- **Predicted Stopping Distance**: the predicted stopping distance for the specified speed according to the selected model (Example below)
 
 ```{r predA}
 data(cars)
-modelA <- lm(dist ~ speed - 1, data = cars)
-predict(modelA, newdata = data.frame(speed = 20))
+
+fit.lm <- lm(dist ~ speed - 1, data = cars)
+predict(fit.lm, newdata = data.frame(speed = 20))
 ```
 
-- **Predicted Stopping Distance for Model B**: the predicted stopping distance for the specified speed according to Model B (see example below).
+- **Selected model**: a text box with the selected model. (Example below)
 
 ```{r predB}
-cars$speedsp <- ifelse(cars$speed - 19 > 0, cars$speed -19, 0)
-modelB <- lm(dist ~ speedsp + speed - 1, data = cars)
-predict(modelB, newdata = data.frame(speed = 19, speedsp = 0))
+print(fit.lm)
 ```
 
 Plot
 ========================================================
-This is an example of the plot produced by the App:
+This is an example of the plots produced by the App:
 
 ```{r plots, echo = FALSE, fig.pos = 'H'}
 plot(cars$speed, cars$dist, xlab = "Car Speed",
              ylab = "Stopping Distance", bty = "n", pch = 16,
              xlim = c(0,25), ylim = c(0,120))
-abline(modelA, col = "red", lwd = 2)
-
-modelBlines <- predict(modelB, newdata = data.frame(
-        speed = 1:25, speedsp = ifelse(1:25 - 19 > 0, 1:25 - 19, 0)))
-
-lines(1:25, modelBlines, col = "blue", lwd = 2)
-
-legend(1, 100, c("Model B Prediction", "Model B Prediction"), pch = 16,
-               col = c("red","blue"), bty = "n", cex = 1.2)
-points(19, predict(modelA, newdata = data.frame(speed = 19)), col = "red", pch = 16, cex = 2)
-points(19, predict(modelB, newdata = data.frame(speed = 19, speedsp = 0)), col = "blue", pch = 16, cex = 2)
+abline(fit.lm, col = "red", lwd = 2)
+points(19, predict(fit.lm, newdata = data.frame(speed = 19)), col = "red", pch = 16, cex = 2)
+par(mfrow = c(2,2))
+plot(fit.lm)
 ```
+
